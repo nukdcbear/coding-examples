@@ -33,11 +33,7 @@ class LinkedList<T> implements ILinkedList<T> {
         if (!this.head) {
             this.head = node;
         } else {
-            const getLast = (node: LLNode<T>): LLNode<T> => {
-                return node.next ? getLast(node.next) : node;
-            };
-
-            const lastNode = getLast(this.head);
+            const lastNode = this.getLast(this.head);
             node.prev = lastNode;
             lastNode.next = node;
         }
@@ -81,20 +77,44 @@ class LinkedList<T> implements ILinkedList<T> {
 
         return this.head ? checkNext(this.head) : null;
     }
+
+    public getLast(node: LLNode<T>): LLNode<T> {
+        return node.next ? this.getLast(node.next) : node;
+    }
+
+    public rotate_right(slots: number): void {
+        if (!this.head) {
+            throw Error("List is empty");
+        }
+
+        for (let slot = 0; slot < slots; slot++) {
+            const lastNode = this.getLast(this.head);
+            this.deleteNode(lastNode);
+            this.insertInBegin(lastNode.data);
+        }
+
+    }
 }
 
 interface Post {
-    title: string;
+    title: string | number;
 }
 
 const llist = new LinkedList<Post>();
 
-llist.traverse()
+// llist.traverse()
 
-llist.insertAtEnd({ title: "Post A" });
-llist.insertAtEnd({ title: "Post B" });
-llist.insertInBegin({ title: "Post C" });
-llist.insertInBegin({ title: "Post D" });
+// llist.insertAtEnd({ title: "Post A" });
+// llist.insertAtEnd({ title: "Post B" });
+// llist.insertInBegin({ title: "Post C" });
+// llist.insertInBegin({ title: "Post D" });
 
+llist.insertAtEnd({ title: 7 });
+llist.insertAtEnd({ title: 7 });
+llist.insertAtEnd({ title: 3 });
+llist.insertAtEnd({ title: 5 });
 console.log(llist.traverse());
-console.log(llist.search(({ title }) => title === "Post A"));
+// console.log(llist.search(({ title }) => title === "Post A"));
+
+llist.rotate_right(2);
+console.log(llist.traverse());
